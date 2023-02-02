@@ -42,7 +42,10 @@ See https://github.com/mikeboers/PyAV#installation for instructions on how to
 install PyAV on your system.
 """
     )
-
+    
+def _check_av_available() -> None:
+    if isinstance(av, Exception):
+        raise av
 
 class VideoReader:
     """
@@ -168,6 +171,7 @@ class VideoReader:
                 self._c.init_from_memory(src, stream, num_threads)
 
         elif self.backend == "pyav":
+            _check_av_available()
             self.container = av.open(src, metadata_errors="ignore")
             # TODO: load metadata
             stream_type = stream.split(":")[0]
